@@ -85,7 +85,7 @@ const Login = () => {
 
                     {/* Facebook Login Component */}
                     <FacebookLogin
-                        appId="725981313938292"
+                        appId="954036833981551"
                         callback={(response) => {
                             handleFacebookLogin(response);
                             if (response.accessToken) navigate('/home');
