@@ -48,15 +48,14 @@ const Navbar = () => {
             <div className="container">
                 <div className="nav-container-inner" style={{
                     display: 'flex',
-                    justifyContent: 'flex-start',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
                     width: '100%',
-                    gap: mobileMenuOpen ? '0' : '5px',
-                    paddingLeft: '0' // Absolute edge
+                    padding: '0 20px'
                 }}>
                     <style>{`
                         @media (max-width: 1024px) {
-                            .nav-container-inner { padding-left: 0 !important; }
+                            .nav-container-inner { padding: 0 15px !important; }
                         }
                     `}</style>
                     {/* Mobile Menu Toggle Button */}
