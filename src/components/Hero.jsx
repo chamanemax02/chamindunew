@@ -53,7 +53,7 @@ const Hero = () => {
             </motion.p>
 
             {/* Counters */}
-            <div className="flex justify-center flex-wrap gap-10 md:gap-32 mb-12">
+            <div className="flex justify-center flex-wrap gap-6 md:gap-32 mb-12 px-4">
                 <Counter value="50" label="PROJECTS COMPLETED" />
                 <Counter value="30" label="HAPPY CLIENTS" />
                 <Counter value="2021-2026" label="YEARS EXPERIENCE" />
@@ -106,10 +106,10 @@ const Counter = ({ value, label }) => (
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.8 }}
-        style={{ textAlign: 'center', padding: '0 20px' }}
+        style={{ textAlign: 'center', padding: '0 10px' }}
     >
-        <h3 style={{ fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', fontWeight: '900', color: 'var(--primary)', marginBottom: '10px' }}>{value}</h3>
-        <p style={{ fontSize: '0.7rem', fontWeight: '800', color: '#666', letterSpacing: '2px', maxWidth: '150px', margin: '0 auto' }}>{label}</p>
+        <h3 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: '900', color: 'var(--primary)', marginBottom: '10px' }}>{value}</h3>
+        <p style={{ fontSize: '0.65rem', fontWeight: '800', color: '#666', letterSpacing: '1px', maxWidth: '120px', margin: '0 auto' }}>{label}</p>
     </motion.div>
 );
 
