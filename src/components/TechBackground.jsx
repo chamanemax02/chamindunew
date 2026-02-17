@@ -20,9 +20,9 @@ const TechBackground = () => {
         const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
         const particles = [];
-        const particleCount = isMobile ? 35 : isTablet ? 60 : 100;
-        const connectionDistance = isMobile ? 120 : 180;
-        const velocityScale = isMobile ? 0.4 : 0.8;
+        const particleCount = isMobile ? 45 : isTablet ? 80 : 130;
+        const connectionDistance = isMobile ? 140 : 200;
+        const velocityScale = isMobile ? 0.5 : 0.9;
 
         class Particle {
             constructor() {
@@ -81,7 +81,7 @@ const TechBackground = () => {
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
-                        const alpha = (1 - dist / connectionDistance) * 0.5;
+                        const alpha = (1 - dist / connectionDistance) * 0.7;
                         ctx.strokeStyle = `rgba(0, 255, 163, ${alpha})`;
                         ctx.lineWidth = 1;
                         ctx.stroke();
