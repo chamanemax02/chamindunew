@@ -55,9 +55,9 @@ function App() {
                 {/* Navbar is global */}
                 <Navbar />
 
-                <div className="content-wrapper" role="main">
+                <div className="content-wrapper" role="main" style={{ position: 'relative', zIndex: 2 }}>
                     <AnimatePresence mode="wait">
-                        <Routes location={location}>
+                        <Routes location={location} key={location.pathname.split('/')[1] || 'root'}>
                             {/* Public Routes */}
                             <Route path="/login" element={!user ? <Login /> : <Navigate to="/home" replace />} />
                             <Route path="/order" element={<Order />} />
