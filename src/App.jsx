@@ -57,7 +57,7 @@ function App() {
 
                 <div className="content-wrapper" role="main">
                     <AnimatePresence mode="wait">
-                        <Routes location={location} key={location.pathname}>
+                        <Routes location={location}>
                             {/* Public Routes */}
                             <Route path="/login" element={!user ? <Login /> : <Navigate to="/home" replace />} />
                             <Route path="/order" element={<Order />} />
