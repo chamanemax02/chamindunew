@@ -67,8 +67,9 @@ const Navbar = () => {
                                 fontSize: 'clamp(1rem, 2vw, 1.3rem)',
                                 letterSpacing: '-0.5px',
                                 color: '#fff',
-                                textTransform: 'uppercase'
-                            }}>CHAMINDU<span style={{ color: 'var(--primary)', opacity: 0.8 }}>.SITE</span></span>
+                                textTransform: 'uppercase',
+                                textShadow: '0 0 15px rgba(255, 255, 255, 0.2)'
+                            }}>CHAMINDU<span style={{ color: 'var(--primary)', textShadow: '0 0 20px var(--primary-glow)' }}>.SITE</span></span>
                         </Link>
                     </div>
 
