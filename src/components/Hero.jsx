@@ -1,191 +1,187 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { db } from '../firebase/firebaseConfig';
-import { ref, onValue } from 'firebase/database';
-import { ExternalLink, Folder, Loader2 } from 'lucide-react';
+// BUILD_TAG: UI_REFRESH_FORCE
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Linkedin, Github, Twitter } from 'lucide-react';
+import { TypeAnimation } from 'react-type-animation';
 
-const Portfolio = () => {
-    const [filter, setFilter] = useState('all');
-    const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const projectsRef = ref(db, 'projects');
-        const unsubscribe = onValue(projectsRef, (snapshot) => {
-            try {
-                const data = snapshot.val();
-                const list = data ? Object.entries(data).map(([id, val]) => ({ id, ...val })) : [];
-                setProjects(list.sort((a, b) => b.createdAt - a.createdAt));
-                setLoading(false);
-            } catch (err) {
-                console.error("Data parsing error:", err);
-                setError(err.message);
-                setLoading(false);
-            }
-        }, (errorObj) => {
-            console.error("Firebase read failed:", errorObj);
-            setError(errorObj.message);
-            setLoading(false);
-        });
-        return () => unsubscribe();
-    }, []);
-
-    const filteredProjects = filter === 'all' ? projects : projects.filter(p => p.category === filter);
-
-    if (loading) {
-        return (
-            <div className="container" style={{ paddingBottom: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px' }}>
-                <Loader2 size={40} className="animate-spin" color="var(--primary)" />
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="container" style={{ paddingBottom: '100px', textAlign: 'center', color: '#ff6b6b' }}>
-                <h3>Unable to load projects</h3>
-                <p>{error}</p>
-            </div>
-        );
-    }
-
+const Hero = () => {
     return (
-        <div className="container" style={{ paddingBottom: '100px' }}>
-            <h2 className="section-title-p">My <span>Projects</span></h2>
+        <div className="container" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+            {/* Background Glow */}
+            <div className="glow-overlay" style={{ top: '20%', left: '10%' }}></div>
+            <div className="glow-overlay" style={{ bottom: '20%', right: '10%', background: 'var(--orange-glow)' }}></div>
 
-            <div className="portfolio-filters">
-                {['all', 'web', 'ai', 'wordpress'].map((category) => (
-                    <button
-                        key={category}
-                        onClick={() => setFilter(category)}
-                        className={`contact-btn`}
-                        style={{
-                            background: filter === category ? 'var(--primary)' : 'rgba(255,255,255,0.03)',
-                            color: filter === category ? '#000' : '#fff',
-                            border: '1px solid',
-                            borderColor: filter === category ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
-                            fontSize: '0.9rem',
-                            padding: '12px 24px',
-                            fontWeight: '800',
-                            borderRadius: '12px',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s ease',
-                            whiteSpace: 'nowrap'
-                        }}
-                    >
-                        {category.toUpperCase()}
-                    </button>
-                ))}
-            </div>
+            {/* Profile Image - Centered and Large */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ type: 'spring', damping: 15 }}
+                style={{
+                    width: 'clamp(140px, 35vw, 240px)',
+                    height: 'clamp(140px, 35vw, 240px)',
+                    borderRadius: '50%', // Circular
+                    padding: '8px',
+                    border: '1px solid rgba(0, 255, 163, 0.2)',
+                    background: 'rgba(255,255,255,0.02)',
+                    backdropFilter: 'blur(20px)',
+                    marginBottom: 'clamp(15px, 3vh, 30px)',
+                    position: 'relative',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                }}
+            >
+                <img
+                    src="/profil.png"
+                    alt="Chamindu"
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '50%', // Circular
+                    }}
+                />
+            </motion.div>
 
+            {/* Name & Title */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                style={{ width: '100%' }}
+            >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <h1 style={{
+                        fontWeight: '900',
+                        color: '#fff',
+                        letterSpacing: 'clamp(-2px, -0.5vw, -0.5px)',
+                        lineHeight: 1,
+                        fontSize: 'clamp(2.2rem, 10vw, 5rem)',
+                        textShadow: '0 20px 40px rgba(0,0,0,0.3)',
+                        textAlign: 'center'
+                    }}>
+                        <TypeAnimation
+                            sequence={[
+                                "Hi, I'm",
+                                800,
+                                "Hi, I'm Mr. Chamindu Ransika",
+                                2000,
+                            ]}
+                            wrapper="span"
+                            speed={50}
+                            cursor={true}
+                            style={{ display: 'inline-block' }}
+                            repeat={0}
+                        />
+                    </h1>
+                </div>
+                <p style={{
+                    color: '#888',
+                    fontWeight: '600',
+                    textAlign: 'center',
+                    marginBottom: 'clamp(20px, 4vh, 40px)',
+                    maxWidth: '800px',
+                    marginInline: 'auto',
+                    lineHeight: '1.6',
+                    fontSize: 'clamp(0.85rem, 2vw, 1.1rem)'
+                }}>
+                    Specializing in <span style={{ color: '#fff' }}>high-end digital experiences</span>, scalable full-stack architectures, and AI-driven creative solutions. Dedicated to building clean, powerful, and user-centric applications.
+                </p>
+            </motion.div>
+
+            {/* Advanced Infinite Marquee Roles */}
             <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '20px'
+                width: '100vw',
+                overflow: 'hidden',
+                position: 'relative',
+                marginBottom: '40px',
+                maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+                transform: 'rotate(-1deg)', // Subtle skew for 3D feel
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '15px'
             }}>
-                {filteredProjects.length > 0 ? (
-                    filteredProjects.map((project, idx) => (
-                        <div
-                            key={project.id}
-                            className="project-card-official"
-                            style={{
-                                background: 'rgba(15,15,15,0.7)',
-                                backdropFilter: 'blur(20px)',
-                                borderRadius: '30px',
-                                border: '1px solid rgba(255,255,255,0.06)',
-                                overflow: 'hidden',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                position: 'relative',
-                                height: '100%'
-                            }}
-                        >
-                            {/* Banner Image */}
-                            <div style={{
-                                width: '100%',
-                                height: '200px',
-                                overflow: 'hidden',
-                                background: 'rgba(255,255,255,0.02)',
-                                position: 'relative'
-                            }}>
-                                {project.image ? (
-                                    <img
-                                        src={project.image}
-                                        alt={project.title}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                ) : (
-                                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', opacity: 0.2 }}>
-                                        <Folder size={60} />
-                                    </div>
-                                )}
-                                <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
-                                    {project.url && (
-                                        <a href={project.url} target="_blank" rel="noopener noreferrer"
-                                            style={{
-                                                width: '40px', height: '40px', background: 'rgba(0,0,0,0.5)',
-                                                backdropFilter: 'blur(10px)', borderRadius: '12px',
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                color: '#fff', border: '1px solid rgba(255,255,255,0.1)'
-                                            }}
-                                            className="hover:text-primary transition-colors">
-                                            <ExternalLink size={18} />
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
+                {/* Row 1: Right to Left */}
+                <motion.div
+                    animate={{ x: [0, -1200] }}
+                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                    style={{ display: 'flex', gap: '20px', width: 'max-content' }}
+                >
+                    {[...['DEVELOPER', 'DESIGNER', 'AI CREATIVE', 'FOUNDER', 'FULL STACK', 'UI/UX'], ...['DEVELOPER', 'DESIGNER', 'AI CREATIVE', 'FOUNDER', 'FULL STACK', 'UI/UX'], ...['DEVELOPER', 'DESIGNER', 'AI CREATIVE', 'FOUNDER', 'FULL STACK', 'UI/UX']].map((role, idx) => (
+                        <MarqueeBadge key={`r1-${idx}`} label={role} />
+                    ))}
+                </motion.div>
 
-                            <div className="project-card-content" style={{ padding: '30px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                <span style={{
-                                    fontSize: '0.65rem',
-                                    fontWeight: '800',
-                                    color: 'var(--primary)',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '3px',
-                                    display: 'block',
-                                    marginBottom: '10px'
-                                }}>
-                                    {project.category}
-                                </span>
-                                <h3 style={{ fontSize: '1.4rem', fontWeight: '900', color: '#fff', marginBottom: '15px' }}>
-                                    {project.title}
-                                </h3>
-                                <p style={{ fontSize: '0.9rem', color: '#888', lineHeight: '1.7', marginBottom: '25px' }}>
-                                    {project.description || "Experimental digital solution crafted with modern technologies and clean architecture."}
-                                </p>
-
-                                <div className="flex gap-2 flex-wrap mt-auto">
-                                    {(project.tech || []).map((t, tIdx) => (
-                                        <span
-                                            key={t}
-                                            style={{
-                                                fontSize: '0.65rem',
-                                                fontWeight: '700',
-                                                padding: '6px 14px',
-                                                background: 'rgba(255,255,255,0.03)',
-                                                borderRadius: '10px',
-                                                color: '#666',
-                                                border: '1px solid rgba(255,255,255,0.05)',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {t}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '20px' }}>
-                        <Folder size={40} style={{ opacity: 0.3, marginBottom: '20px' }} />
-                        <h4 style={{ color: '#888' }}>No projects found in this category.</h4>
-                    </div>
-                )}
+                {/* Row 2: Left to Right */}
+                <motion.div
+                    animate={{ x: [-1200, 0] }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    style={{ display: 'flex', gap: '20px', width: 'max-content' }}
+                >
+                    {[...['APP DEV', 'BACKEND', 'SOLUTIONS', 'ARCHITECT', 'SYSTEMS', 'WEB3'], ...['APP DEV', 'BACKEND', 'SOLUTIONS', 'ARCHITECT', 'SYSTEMS', 'WEB3'], ...['APP DEV', 'BACKEND', 'SOLUTIONS', 'ARCHITECT', 'SYSTEMS', 'WEB3']].map((role, idx) => (
+                        <MarqueeBadge key={`r2-${idx}`} label={role} />
+                    ))}
+                </motion.div>
             </div>
+
+            <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="flex justify-center"
+                style={{ gap: '24px' }}
+            >
+                <SocialIcon icon={<Linkedin size={26} />} href="https://www.linkedin.com/in/chamindu-ransika-2008-chama" />
+                <SocialIcon icon={<Twitter size={26} />} href="https://x.com/chamindu_dev" />
+                <SocialIcon icon={<Github size={26} />} href="https://github.com/chamindu-ransika" />
+            </motion.div>
         </div>
     );
 };
 
-export default Portfolio;
+const MarqueeBadge = ({ label }) => (
+    <motion.span
+        whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.08)', borderColor: 'var(--primary)' }}
+        style={{
+            fontSize: 'clamp(0.65rem, 1.8vw, 0.8rem)',
+            fontWeight: '800',
+            padding: '12px 28px',
+            background: 'rgba(255,255,255,0.02)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.05)',
+            borderRadius: '100px',
+            color: '#fff',
+            letterSpacing: '2px',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            cursor: 'pointer',
+            transition: 'border-color 0.3s ease, background-color 0.3s ease'
+        }}
+    >
+        {label}
+    </motion.span>
+);
+
+const Counter = ({ value, label }) => (
+    <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        style={{ textAlign: 'center', padding: '0 10px' }}
+    >
+        <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)', fontWeight: '900', color: 'var(--primary)', marginBottom: '5px' }}>{value}</h3>
+        <p style={{ fontSize: '0.6rem', fontWeight: '800', color: '#666', letterSpacing: '1px', maxWidth: '100px', margin: '0 auto' }}>{label}</p>
+    </motion.div>
+);
+
+const SocialIcon = ({ icon, href }) => (
+    <motion.a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        whileHover={{ y: -5, color: 'var(--primary)' }}
+        style={{ color: '#fff', transition: 'all 0.3s ease' }}
+    >
+        {icon}
+    </motion.a>
+);
+
+export default Hero;
