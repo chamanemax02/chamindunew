@@ -1,187 +1,261 @@
-// BUILD_TAG: UI_REFRESH_FORCE
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Linkedin, Github, Twitter } from 'lucide-react';
-import { TypeAnimation } from 'react-type-animation';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, LogOut, LayoutDashboard, Github, Linkedin, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { Link, useLocation } from 'react-router-dom';
 
-const Hero = () => {
+const Navbar = () => {
+    const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { user, isAdmin, logout } = useAuth();
+    const location = useLocation();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20 || document.getElementById('scroll-container')?.scrollTop > 20);
+        };
+
+        const container = document.getElementById('scroll-container');
+        if (container) {
+            container.addEventListener('scroll', handleScroll);
+        } else {
+            window.addEventListener('scroll', handleScroll);
+        }
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            container?.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    const navLinks = [
+        { name: 'Home', path: '/home' },
+        { name: 'About', path: '/about' },
+        { name: 'Services', path: '/services' },
+        { name: 'Projects', path: '/portfolio' },
+        { name: 'Reviews', path: '/testimonials' },
+        { name: 'Order', path: '/order' },
+        { name: 'Contact', path: '/contact' },
+    ];
+
+    const isHomePage = ['/', '/home', '/about', '/services', '/portfolio', '/testimonials', '/contact', '/order'].includes(location.pathname);
+
+    const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+    const closeMobileMenu = () => setMobileMenuOpen(false);
+
     return (
-        <div className="container" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-            {/* Background Glow */}
-            <div className="glow-overlay" style={{ top: '20%', left: '10%' }}></div>
-            <div className="glow-overlay" style={{ bottom: '20%', right: '10%', background: 'var(--orange-glow)' }}></div>
+        <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
+            <div className="container">
+                <div className="nav-container-inner" id="navbar-top">
+                    <div className="flex items-center gap-4">
+                        <Link to="/home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'calc(8px + 0.5vw)' }}>
+                            <div style={{
+                                width: 'clamp(32px, 5vw, 42px)',
+                                height: 'clamp(32px, 5vw, 42px)',
+                                borderRadius: '50%',
+                                // background: 'linear-gradient(135deg, var(--primary) 0%, #00b377 100%)', // Removed gradient
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                overflow: 'hidden',
+                                // boxShadow: '0 0 20px var(--primary-glow)' // Removed excess glow if not needed
+                            }}>
+                                <img src="/profil.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </div>
+                            <span style={{
+                                fontWeight: '900',
+                                fontSize: 'clamp(1rem, 2vw, 1.3rem)',
+                                letterSpacing: '-0.5px',
+                                color: '#fff',
+                                textTransform: 'uppercase',
+                                textShadow: '0 0 15px rgba(255, 255, 255, 0.2)'
+                            }}>CHAMINDU<span style={{ color: 'var(--primary)', textShadow: '0 0 20px var(--primary-glow)' }}>.SITE</span></span>
+                        </Link>
+                    </div>
 
-            {/* Profile Image - Centered and Large */}
-            <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', damping: 15 }}
-                style={{
-                    width: 'clamp(140px, 35vw, 240px)',
-                    height: 'clamp(140px, 35vw, 240px)',
-                    borderRadius: '50%', // Circular
-                    padding: '8px',
-                    border: '1px solid rgba(0, 255, 163, 0.2)',
-                    background: 'rgba(255,255,255,0.02)',
-                    backdropFilter: 'blur(20px)',
-                    marginBottom: 'clamp(15px, 3vh, 30px)',
-                    position: 'relative',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-                }}
-            >
-                <img
-                    src="/profil.png"
-                    alt="Chamindu"
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        borderRadius: '50%', // Circular
-                    }}
-                />
-            </motion.div>
+                    <div className="nav-links flex items-center gap-8">
+                        {isHomePage && navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                to={link.path}
+                                className={`nav-link-item ${location.pathname === link.path ? 'active' : ''}`}
+                                style={{
+                                    fontSize: '0.85rem',
+                                    fontWeight: '700',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '1px'
+                                }}
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+                    </div>
 
-            {/* Name & Title */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                style={{ width: '100%' }}
-            >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <h1 style={{
-                        fontWeight: '900',
-                        color: '#fff',
-                        letterSpacing: 'clamp(-2px, -0.5vw, -0.5px)',
-                        lineHeight: 1,
-                        fontSize: 'clamp(2.2rem, 10vw, 5rem)',
-                        textShadow: '0 20px 40px rgba(0,0,0,0.3)',
-                        textAlign: 'center'
-                    }}>
-                        <TypeAnimation
-                            sequence={[
-                                "Hi, I'm",
-                                800,
-                                "Hi, I'm Mr. Chamindu Ransika",
-                                2000,
-                            ]}
-                            wrapper="span"
-                            speed={50}
-                            cursor={true}
-                            style={{ display: 'inline-block' }}
-                            repeat={0}
-                        />
-                    </h1>
+                    <div className="flex items-center gap-4">
+                        {isAdmin && (
+                            <Link
+                                to="/admin"
+                                style={{
+                                    background: 'rgba(0,255,163,0.1)',
+                                    border: '1px solid rgba(0,255,163,0.2)',
+                                    color: 'var(--primary)',
+                                    padding: '10px 15px',
+                                    borderRadius: '12px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    textDecoration: 'none',
+                                    fontSize: '0.8rem',
+                                    fontWeight: '800'
+                                }}
+                                title="Admin Panel"
+                            >
+                                <ShieldCheck size={18} />
+                                <span className="desktop-only-text">ADMIN</span>
+                            </Link>
+                        )}
+                        {user && (
+                            <button
+                                onClick={logout}
+                                style={{
+                                    background: 'rgba(255,255,255,0.05)',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    color: '#fff',
+                                    padding: '10px',
+                                    borderRadius: '12px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                title="Logout"
+                            >
+                                <LogOut size={18} />
+                            </button>
+                        )}
+                        <button
+                            className="menu-toggle"
+                            onClick={toggleMobileMenu}
+                            style={{
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '10px',
+                                cursor: 'pointer',
+                                display: 'none',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Menu size={22} color="#fff" />
+                        </button>
+                    </div>
+
+                    <style>{`
+                        @media (max-width: 1024px) {
+                            .menu-toggle { display: flex !important; }
+                            .nav-links { display: none; }
+                            .desktop-only-brand { display: none; }
+                            .desktop-only-text { display: none; }
+                        }
+                    `}</style>
                 </div>
-                <p style={{
-                    color: '#888',
-                    fontWeight: '600',
-                    textAlign: 'center',
-                    marginBottom: 'clamp(20px, 4vh, 40px)',
-                    maxWidth: '800px',
-                    marginInline: 'auto',
-                    lineHeight: '1.6',
-                    fontSize: 'clamp(0.85rem, 2vw, 1.1rem)'
-                }}>
-                    Specializing in <span style={{ color: '#fff' }}>high-end digital experiences</span>, scalable full-stack architectures, and AI-driven creative solutions. Dedicated to building clean, powerful, and user-centric applications.
-                </p>
-            </motion.div>
-
-            {/* Advanced Infinite Marquee Roles */}
-            <div style={{
-                width: '100vw',
-                overflow: 'hidden',
-                position: 'relative',
-                marginBottom: '40px',
-                maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-                transform: 'rotate(-1deg)', // Subtle skew for 3D feel
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '15px'
-            }}>
-                {/* Row 1: Right to Left */}
-                <motion.div
-                    animate={{ x: [0, -1200] }}
-                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                    style={{ display: 'flex', gap: '20px', width: 'max-content' }}
-                >
-                    {[...['DEVELOPER', 'DESIGNER', 'AI CREATIVE', 'FOUNDER', 'FULL STACK', 'UI/UX'], ...['DEVELOPER', 'DESIGNER', 'AI CREATIVE', 'FOUNDER', 'FULL STACK', 'UI/UX'], ...['DEVELOPER', 'DESIGNER', 'AI CREATIVE', 'FOUNDER', 'FULL STACK', 'UI/UX']].map((role, idx) => (
-                        <MarqueeBadge key={`r1-${idx}`} label={role} />
-                    ))}
-                </motion.div>
-
-                {/* Row 2: Left to Right */}
-                <motion.div
-                    animate={{ x: [-1200, 0] }}
-                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                    style={{ display: 'flex', gap: '20px', width: 'max-content' }}
-                >
-                    {[...['APP DEV', 'BACKEND', 'SOLUTIONS', 'ARCHITECT', 'SYSTEMS', 'WEB3'], ...['APP DEV', 'BACKEND', 'SOLUTIONS', 'ARCHITECT', 'SYSTEMS', 'WEB3'], ...['APP DEV', 'BACKEND', 'SOLUTIONS', 'ARCHITECT', 'SYSTEMS', 'WEB3']].map((role, idx) => (
-                        <MarqueeBadge key={`r2-${idx}`} label={role} />
-                    ))}
-                </motion.div>
             </div>
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="flex justify-center"
-                style={{ gap: '24px' }}
-            >
-                <SocialIcon icon={<Linkedin size={26} />} href="https://www.linkedin.com/in/chamindu-ransika-2008-chama" />
-                <SocialIcon icon={<Twitter size={26} />} href="https://x.com/chamindu_dev" />
-                <SocialIcon icon={<Github size={26} />} href="https://github.com/chamindu-ransika" />
-            </motion.div>
-        </div>
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, x: '100%' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: '100%' }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            width: '100%',
+                            height: '100vh',
+                            background: '#0d0d0d',
+                            zIndex: 9999,
+                            padding: '40px 30px',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}
+                    >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '60px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{ width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                                    <img src="/profil.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                </div>
+                                <span style={{ fontWeight: '900', fontSize: '1.1rem', color: '#fff', letterSpacing: '1px' }}>CHAMINDU</span>
+                            </div>
+                            <button
+                                onClick={closeMobileMenu}
+                                style={{ background: 'rgba(255,255,255,0.05)', border: 'none', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                            >
+                                <X size={24} color="#fff" />
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col gap-6" style={{ overflowY: 'auto', flex: 1 }}>
+                            {isHomePage && navLinks.map((link) => (
+                                <Link
+                                    key={link.name}
+                                    to={link.path}
+                                    onClick={closeMobileMenu}
+                                    style={{
+                                        fontSize: '1.4rem',
+                                        fontWeight: '800',
+                                        color: location.pathname === link.path ? 'var(--primary)' : '#888',
+                                        textDecoration: 'none',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '2px'
+                                    }}
+                                    className="mobile-nav-link"
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+
+                            {isAdmin && (
+                                <Link
+                                    to="/admin"
+                                    onClick={closeMobileMenu}
+                                    style={{
+                                        fontSize: '1.4rem',
+                                        fontWeight: '800',
+                                        color: 'var(--primary)',
+                                        textDecoration: 'none',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '2px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '12px'
+                                    }}
+                                >
+                                    <ShieldCheck size={28} /> ADMIN PANEL
+                                </Link>
+                            )}
+
+                            {user && (
+                                <button
+                                    onClick={() => { logout(); closeMobileMenu(); }}
+                                    style={{ color: '#ff4d4d', fontWeight: '800', background: 'rgba(255,77,77,0.05)', border: '1px solid rgba(255,77,77,0.1)', borderRadius: '12px', padding: '12px 20px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem' }}
+                                >
+                                    <LogOut size={18} /> SIGN OUT
+                                </button>
+                            )}
+                        </div>
+                        <style>{`
+                            .mobile-nav-link:hover { color: var(--primary) !important; }
+                        `}</style>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </nav>
     );
 };
 
-const MarqueeBadge = ({ label }) => (
-    <motion.span
-        whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.08)', borderColor: 'var(--primary)' }}
-        style={{
-            fontSize: 'clamp(0.65rem, 1.8vw, 0.8rem)',
-            fontWeight: '800',
-            padding: '12px 28px',
-            background: 'rgba(255,255,255,0.02)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.05)',
-            borderRadius: '100px',
-            color: '#fff',
-            letterSpacing: '2px',
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-            cursor: 'pointer',
-            transition: 'border-color 0.3s ease, background-color 0.3s ease'
-        }}
-    >
-        {label}
-    </motion.span>
-);
-
-const Counter = ({ value, label }) => (
-    <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        style={{ textAlign: 'center', padding: '0 10px' }}
-    >
-        <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)', fontWeight: '900', color: 'var(--primary)', marginBottom: '5px' }}>{value}</h3>
-        <p style={{ fontSize: '0.6rem', fontWeight: '800', color: '#666', letterSpacing: '1px', maxWidth: '100px', margin: '0 auto' }}>{label}</p>
-    </motion.div>
-);
-
-const SocialIcon = ({ icon, href }) => (
-    <motion.a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        whileHover={{ y: -5, color: 'var(--primary)' }}
-        style={{ color: '#fff', transition: 'all 0.3s ease' }}
-    >
-        {icon}
-    </motion.a>
-);
-
-export default Hero;
+export default Navbar;
