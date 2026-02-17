@@ -55,8 +55,7 @@ function App() {
                 {/* Navbar is global */}
                 <Navbar />
 
-                <div id="scroll-container" role="main">
-                    <div id="main"></div>
+                <div className="content-wrapper" role="main">
                     <AnimatePresence mode="wait">
                         <Routes location={location} key={location.pathname}>
                             {/* Public Routes */}
